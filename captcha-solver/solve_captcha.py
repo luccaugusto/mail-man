@@ -30,7 +30,7 @@ if __name__ == "__main__":
     from tqdm import tqdm
     from mltu.configs import BaseModelConfigs
 
-    configs = BaseModelConfigs.load("Model/configs.yaml")
+    configs = BaseModelConfigs.load("Model/trained/configs.yaml")
 
     model = ImageToWordModel(model_path=configs.model_path, char_list=configs.vocab)
 
@@ -41,3 +41,21 @@ if __name__ == "__main__":
     image = cv2.imread(image_path)
 
     print(model.predict(image))
+
+    '''
+    df = pd.read_csv("Model/trained/val.csv").values.tolist()
+
+    accum_cer = []
+    for image_path, label in tqdm(df):
+        image = cv2.imread(image_path)
+
+        prediction_text = model.predict(image)
+
+        cer = get_cer(prediction_text, label)
+        print(f"Image: {image_path}, Label: {label}, Prediction: {prediction_text}, CER: {cer}")
+
+        accum_cer.append(cer)
+
+    print(f"Average CER: {np.average(accum_cer)}")
+    '''
+
