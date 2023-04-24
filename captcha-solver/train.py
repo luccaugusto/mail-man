@@ -70,7 +70,7 @@ model.summary(line_length=110)
 os.makedirs(configs.model_path, exist_ok=True)
 
 # Define callbacks
-earlystopper = EarlyStopping(monitor='val_CER', patience=50, verbose=1)
+earlystopper = EarlyStopping(monitor='val_CER', patience=150, verbose=1)
 checkpoint = ModelCheckpoint(f"{configs.model_path}/model.h5", monitor='val_CER', verbose=1, save_best_only=True, mode='min')
 trainLogger = TrainLogger(configs.model_path)
 tb_callback = TensorBoard(f'{configs.model_path}/logs', update_freq=1)

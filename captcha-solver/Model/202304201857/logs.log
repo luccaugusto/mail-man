@@ -1,0 +1,10 @@
+2023-04-20 18:57:04,345 - ImageReader - WARNING - Image images/correios could not be read, returning None.
+2023-04-20 18:57:04,345 - DataProvider - WARNING - Data or annotation is None, marking for removal on epoch end.
+2023-04-20 18:57:04,346 - DataProvider - WARNING - Data or annotation is None, skipping.
+2023-04-20 18:57:09,639 - ImageReader - WARNING - Image images/correios could not be read, returning None.
+2023-04-20 18:57:09,639 - DataProvider - WARNING - Data or annotation is None, marking for removal on epoch end.
+2023-04-20 18:57:09,639 - DataProvider - WARNING - Data or annotation is None, skipping.
+2023-04-20 18:57:16,669 - DataProvider - WARNING - Removing ['images/correios', 'correios'] from dataset.
+2023-04-20 18:57:16,670 - DataProvider - WARNING - Removing ['images/correios', 'correios'] from dataset.
+2023-04-20 18:57:22,421 - root - INFO - Epoch 0; loss: 93.35604095458984; CER: 4.707914352416992; WER: 1.0; val_loss: 29.766067504882812; val_CER: 1.0; val_WER: 1.0
+2023-04-20 18:57:22,426 - DataProvider - WARNING - Removing ['images/correios', 'correios'] from dataset.

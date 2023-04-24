@@ -1,0 +1,13 @@
+2023-04-19 20:58:49,008 - root - INFO - Epoch 0; loss: 174.43368530273438; CER: 7.442178726196289; WER: 1.0; val_loss: 148.9133758544922; val_CER: 1.4700000286102295; val_WER: 1.0
+2023-04-19 20:58:59,870 - root - INFO - Epoch 1; loss: 53.347007751464844; CER: 0.9972066879272461; WER: 1.0; val_loss: 69.4874038696289; val_CER: 1.0; val_WER: 1.0
+2023-04-19 20:59:01,423 - tf2onnx.tfonnx - INFO - Using tensorflow=2.10.1, onnx=1.12.0, tf2onnx=1.14.0/8f8d49
+2023-04-19 20:59:01,423 - tf2onnx.tfonnx - INFO - Using opset <onnx, 15>
+2023-04-19 20:59:01,537 - tf2onnx.tf_utils - INFO - Computed 0 values for constant folding
+2023-04-19 20:59:01,544 - tf2onnx.tf_utils - INFO - Computed 0 values for constant folding
+2023-04-19 20:59:01,547 - tf2onnx.tf_utils - INFO - Computed 0 values for constant folding
+2023-04-19 20:59:01,554 - tf2onnx.tf_utils - INFO - Computed 0 values for constant folding
+2023-04-19 20:59:01,597 - tf2onnx.tf_utils - INFO - Computed 2 values for constant folding
+2023-04-19 20:59:01,680 - tf2onnx.tfonnx - INFO - folding node using tf type=StridedSlice, name=model/bidirectional/forward_lstm/PartitionedCall/strided_slice
+2023-04-19 20:59:01,681 - tf2onnx.tfonnx - INFO - folding node using tf type=StridedSlice, name=model/bidirectional/backward_lstm/PartitionedCall/strided_slice
+2023-04-19 20:59:01,846 - tf2onnx.optimizer - INFO - Optimizing ONNX model
+2023-04-19 20:59:02,293 - tf2onnx.optimizer - INFO - After optimization: BatchNormalization -18 (18->0), Cast -4 (11->7), Concat -4 (10->6), Const -128 (194->66), Expand -3 (4->1), Gather +2 (2->4), Identity -2 (2->0), Shape -1 (4->3), Slice -1 (5->4), Squeeze -3 (5->2), Transpose -83 (87->4), Unsqueeze -14 (17->3)
