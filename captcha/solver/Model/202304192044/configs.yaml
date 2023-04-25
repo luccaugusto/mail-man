@@ -1,9 +1,0 @@
-batch_size: 64
-height: 80
-learning_rate: 0.001
-max_text_length: 6
-model_path: Models/202304192044
-train_epochs: 2
-train_workers: 20
-vocab: t0b9nlgkehmrc5jy764swvu83fpaz2d
-width: 215
