@@ -4,7 +4,7 @@
   "description": "learning redux saga",
   "main": "index.js",
   "scripts": {
-    "test": "node index.js PQ937941205BR"
+    "test": "node index.js -t PQ937941205BR"
   },
   "author": "lucca",
   "license": "ISC",
