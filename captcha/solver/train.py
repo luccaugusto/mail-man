@@ -19,7 +19,7 @@ from configs import ModelConfigs
 
 # Create a list of all the images and labels in the dataset
 dataset, vocab, max_len = [], set(), 0
-captcha_path = os.path.join('images')
+captcha_path = os.path.join('../', 'train-set')
 for file in os.listdir(captcha_path):
     file_path = os.path.join(captcha_path, file)
     label = os.path.splitext(file)[0] # Get the file name without the extension

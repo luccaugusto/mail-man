@@ -1,3 +1,6 @@
-node_modules/
-__pycache__/
-images/*
+**/node_modules/
+**/__pycache__/
+**/images/
+**/train-set/
+**/img/
+**/Model/

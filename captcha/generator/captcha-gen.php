@@ -15,7 +15,7 @@
             /* Settings */
             $text = substr(str_shuffle("abcdefghijklmnopqrstuvwyxz0123456789"),0,($letter_quantity));
             $filename = $text.'.png';
-            $font = './arial.ttf';
+            $font = './arialceb.ttf';
             $textColor=$this->hexToRGB($textColor);
             $fontSize = 40;
 

@@ -12,7 +12,7 @@ wave_transform()
 	wave_prefix="wave-"
 	crop_prefix="crop-"
 	width_distortion=$((RANDOM % 200 + 100))
-	distort_rate=$((RANDOM % 30 + 15))
+	distort_rate=$((RANDOM % 30 + 18))
 	height_distortion=$((width_distortion / distort_rate))
 
 	convert "$data_dir/$image" -wave "$height_distortion""x""$width_distortion" "$data_dir/$wave_prefix$image"
