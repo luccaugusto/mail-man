@@ -14,7 +14,10 @@ function* startWorker(action) {
   const sessionCookies = yield call(getSessionCookies, trackBot.headers);
   trackBot.cookies = sessionCookies;
 
-  const {captchaCookie, captchaImage} = yield call(getSecureImage, trackBot.headers, trackBot.cookies);
+  for (let i=0; i<20; i++){
+    const {captchaCookie, captchaImage} = yield call(getSecureImage, trackBot.headers, trackBot.cookies, `${i}.png`);
+  }
+  return;
   const cookieIndex = trackBot.cookies.findIndex((cookie) => cookie.split('=')[0] === captchaCookie.split('=')[0]);
   trackBot.cookies[cookieIndex] = captchaCookie;
 
