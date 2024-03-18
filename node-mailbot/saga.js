@@ -14,11 +14,11 @@ function* startWorker(action) {
   const sessionCookies = yield call(getSessionCookies, trackBot.headers);
   trackBot.cookies = sessionCookies;
 
-  for (let i=0; i<1000; i++){
+  /* for (let i=0; i<1000; i++){
     const {captchaCookie, captchaImage} = yield call(getSecureImage, trackBot.headers, trackBot.cookies, `${i}.png`);
   }
-  return;
-  const {captchaCookie, captchaImage} = yield call(getSecureImage, trackBot.headers, trackBot.cookies, `${i}.png`);
+  return; */
+  const {captchaCookie, captchaImage} = yield call(getSecureImage, trackBot.headers, trackBot.cookies, `captcha.png`);
   const cookieIndex = trackBot.cookies.findIndex((cookie) => cookie.split('=')[0] === captchaCookie.split('=')[0]);
   trackBot.cookies[cookieIndex] = captchaCookie;
 
@@ -66,7 +66,7 @@ function showTrackData(action) {
   }
   console.log(`=== Rastreio do pacote ${data.codObjeto} ===`);;
   console.log(`    categoria: ${data.tipoPostal.categoria}`);
-  console.log(`    data prevista: ${data.dtPrevista.date.substring(0, data.dtPrevista.date.length-7)}`);
+  console.log(`    data prevista: ${data.dtPrevista.date?.substring(0, data.dtPrevista?.date.length-7)}`);
   console.log("    = Histórico =");
 
   data.eventos.slice().reverse().forEach((e) => {
