@@ -7,7 +7,7 @@ class Api:
         self.result_url = 'https://rastreamento.correios.com.br/app/resultado.php?mqs=S'
         self.rastro_multi_url = 'https://rastreamento.correios.com.br/app/rastroMulti.php?'
 
-    def get(self, url, headers, cookies):
+    def get(self, url: str, headers: dict, cookies: dict) -> None:
         response = requests.get(url, headers=headers, cookies=cookies)
 
         if not response.ok:
