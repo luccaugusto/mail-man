@@ -162,7 +162,7 @@ class PackageManager:
                 self.show_single_package_status(package)
             print("\n")
 
-        if len(delivered) > 0:
+        if len(delivered) > 0 and options.show_delivered:
             print("============ Já Entregue ============")
             for package in delivered:
                 self.show_single_package_status(package)

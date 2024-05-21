@@ -7,6 +7,7 @@ class Options:
     detailed: bool = False
     code: str = ""
     label: str = ""
+    show_delivered: bool = False
 
     @classmethod
     def parse_opts(cls, args: list) -> None:
@@ -21,6 +22,10 @@ class Options:
         if Commands.DETAILED.value in args:
             cls.detailed = True
             args.remove(Commands.DETAILED.value)
+
+        if Commands.SHOW_DELIVERED.value in args:
+            cls.show_delivered = True
+            args.remove(Commands.SHOW_DELIVERED.value)
 
         cls.command = args[0] if len(args) > 0 else Commands.TRACK_ALL.value
         cls.code = args[1] if len(args) > 1 else ""

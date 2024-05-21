@@ -8,8 +8,23 @@ from commands import Commands
 
 def track_all(package_manager: PackageManager) -> None:
     print("======= Tracking all packages =======")
-    print(" +", "\n + ".join([str(p) for p in package_manager.package_list]))
+    print(
+        " +",
+        "\n + ".join(
+            [str(p) for p in package_manager.package_list if p.delivered == "False"]
+        ),
+    )
     print("")
+
+    print(options.show_delivered)
+    if options.show_delivered:
+        print("======= Delivered packages =======")
+        print(
+            " +",
+            "\n + ".join(
+                [str(p) for p in package_manager.package_list if p.delivered == "True"]
+            ),
+        )
 
     track_bot = TrackBot()
     statuses = track_bot.track(package_manager.package_list)
