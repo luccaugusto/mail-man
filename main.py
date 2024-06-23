@@ -16,7 +16,6 @@ def track_all(package_manager: PackageManager) -> None:
     )
     print("")
 
-    print(options.show_delivered)
     if options.show_delivered:
         print("======= Delivered packages =======")
         print(
