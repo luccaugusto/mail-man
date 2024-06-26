@@ -209,7 +209,7 @@ class PackageManager:
         elif destination_city and destination_state:
             locale_change = f"{event['descricao']} - {city}"
 
-        print(f"  {date} - {locale_change} ")
+        print(f"  > {date} - {locale_change} ")
 
     def show_single_package_status(self, package: Package) -> None:
         if not "objeto" in package.status:
@@ -219,9 +219,9 @@ class PackageManager:
             return
 
         status = package.status["objeto"]
-        print(
-            f">>>> {package.label} {package.code} -  Previsão: {status['dtPrevista']} - Tipo: {status['tipoPostal']['categoria']}"
-        )
+        print(f">>>> {package.label} {package.code}")
+        print(f"  - Previsão: {status['dtPrevista']}")
+        print(f"  - Tipo: {status['tipoPostal']['categoria']}")
         self.show_event(status["eventos"][0])
         if options.detailed:
             for event in status["eventos"][1:]:
