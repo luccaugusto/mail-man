@@ -4,26 +4,25 @@ from options import options
 from package_manager import PackageManager, Package
 from track_bot import TrackBot
 from commands import Commands
+from ui_display import UIDisplay, ASCIIArt  # Import the new UI system
 
 
 def track_all(package_manager: PackageManager) -> None:
-    print("======= Tracking all packages =======")
-    print(
-        " +",
-        "\n + ".join(
-            [str(p) for p in package_manager.package_list if p.delivered == "False"]
-        ),
-    )
+    print(ASCIIArt.tracking_all_header())
+    
+    # Show packages being tracked with new formatting
+    pending_packages = [p for p in package_manager.package_list if p.delivered == "False"]
+    if pending_packages:
+        for package in pending_packages:
+            print(UIDisplay.format_package_entry(package))
     print("")
 
     if options.show_delivered:
-        print("======= Delivered packages =======")
-        print(
-            " +",
-            "\n + ".join(
-                [str(p) for p in package_manager.package_list if p.delivered == "True"]
-            ),
-        )
+        print(ASCIIArt.package_delivered())
+        delivered_packages = [p for p in package_manager.package_list if p.delivered == "True"]
+        if delivered_packages:
+            for package in delivered_packages:
+                print(UIDisplay.format_package_entry(package, show_delivered_status=True))
 
     track_bot = TrackBot()
     statuses = track_bot.track(package_manager.package_list)
@@ -36,7 +35,7 @@ def track_all(package_manager: PackageManager) -> None:
 
 
 def track_single(code: str) -> None:
-    print("Tracking package: ", code)
+    print(ASCIIArt.single_package_box(code, "Tracking single package"))
     track_bot = TrackBot()
     package = Package(code)
     status = track_bot.track_single(package.code)
@@ -53,6 +52,9 @@ def track_single(code: str) -> None:
 
 
 if __name__ == "__main__":
+    # Show the cool startup banner first!
+    UIDisplay.show_startup_banner()
+    
     args = sys.argv[1:]
 
     options.parse_opts(args)
@@ -92,5 +94,5 @@ if __name__ == "__main__":
         package_manager.save()
         exit(0)
     except Exception as e:
-        print("Operation failed with Error: ", e)
+        print(ASCIIArt.error_message(str(e)))
         exit(1)

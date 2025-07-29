@@ -1,7 +1,9 @@
 import os
 import signal
 import subprocess
+import time
 from api import Api
+from ui_display import ASCIIArt, Colors  # Import the new UI system
 
 
 class TrackBot:
@@ -27,7 +29,7 @@ class TrackBot:
         self.get_session_cookies()
 
     def get_package_status(self, code_list: list[str]) -> list[dict]:
-        print("=========== Solve captcha ===========")
+        print(ASCIIArt.captcha_solving())
         while True:
             image_cookies, image = self.secure_image()
             self.update_mail_cookie(image_cookies)
@@ -35,7 +37,7 @@ class TrackBot:
             package_status = self.package_status(captcha_answer, code_list)
             if not "erro" in package_status:
                 break
-            print("Captcha error, try again")
+            print(f"    {Colors.RED}❌ Captcha error, trying again...{Colors.END}")
 
         self.save_captcha(captcha_answer)
         return package_status
@@ -56,7 +58,8 @@ class TrackBot:
                 preexec_fn=os.setsid,
             )
 
-        captcha_answer = input("Answer => ").strip()
+        print(f"    {Colors.YELLOW}❓ Please enter the captcha solution:{Colors.END}")
+        captcha_answer = input(f"    {Colors.CYAN}📝 Answer => {Colors.END}").strip()
         os.killpg(os.getpgid(process.pid), signal.SIGTERM)
         return captcha_answer
 
@@ -69,13 +72,36 @@ class TrackBot:
         return self.get_package_status([code])
 
     def track(self, packages: list) -> list[dict]:
-        code_list = [p.code for p in packages]
+        code_list = [p.code for p in packages if p.delivered == "False"]
         return self.get_package_status(code_list)
 
     def get_session_cookies(self) -> None:
-        response = self.api.get(self.api.cookie_url, self.headers, self.cookies)
+        max_retries = 6
+        for attempt in range(max_retries):
+            try:
+                print(f"    {Colors.BLUE}🔄 Getting session cookies (attempt {attempt + 1}/{max_retries}){Colors.END}")
+                response = self.api.get(self.api.cookie_url, self.headers, self.cookies)
 
-        self.cookies = self.api.format_cookies(response.headers["set-cookie"])
+                # Check if response has the expected cookie header
+                if "set-cookie" not in response.headers:
+                    raise Exception("No set-cookie header in response")
+
+                self.cookies = self.api.format_cookies(response.headers["set-cookie"])
+                print(f"    {Colors.GREEN}✅ Successfully obtained session cookies{Colors.END}")
+                return  # Success - exit the retry loop
+
+            except Exception as e:
+                print(f"    {Colors.YELLOW}⚠️  Attempt {attempt + 1} failed: {str(e)}{Colors.END}")
+
+                # If this was the last attempt, re-raise the exception
+                if attempt == max_retries - 1:
+                    print(f"    {Colors.RED}❌ Max retries exceeded. Unable to get session cookies.{Colors.END}")
+                    raise e
+
+                # Calculate exponential backoff wait time (2^attempt seconds)
+                wait_time = 2 ** attempt
+                print(f"    {Colors.CYAN}⏳ Waiting {wait_time} seconds before retry...{Colors.END}")
+                time.sleep(wait_time)
 
     def secure_image(self) -> [str, bytes]:
         response = self.api.get(self.api.secure_image_url, self.headers, self.cookies)

@@ -1,4 +1,5 @@
 from enum import Enum
+from ui_display import ASCIIArt, Colors  # Import the new UI system
 
 
 class Commands(Enum):
@@ -18,17 +19,36 @@ class Commands(Enum):
 
     @staticmethod
     def show_help() -> None:
-        print("Usage: mail-man [arg] [tracking code list]")
-        print("\t-a tracking-code: add a tracking code to the list")
-        print("\t-h: show this help text")
-        print("\t-t tracking-code: track a single package")
-        print("\t-r tracking-code: remove a package from the list")
-        print("\t--keep: do not delete delivered packages from the list (default)")
-        print("\t--no-keep: delete delivered packages from the list")
-        print("\t--help: show this help text")
-        print("\t--list: list packages being tracked")
-        print("\t--list-all: list tracked and delivered packages")
-        print("\t--show-delivered: show delivered packages when tracking packages")
-        print("\t--track-all: track all packages from the list")
-        print("\t--remove-all: remove all packages from the list")
+        print(f"""
+{Colors.BLUE}{Colors.BOLD}    ┌─────────────────────────────────────────────────────────────────────────┐
+    │  📋 MAIL-MAN HELP & USAGE GUIDE 📋                                     │
+    └─────────────────────────────────────────────────────────────────────────┘{Colors.END}
+
+{Colors.YELLOW}{Colors.BOLD}    📦 USAGE:{Colors.END}
+        {Colors.CYAN}mail-man [command] [tracking-code] [options]{Colors.END}
+
+{Colors.YELLOW}{Colors.BOLD}    🎯 MAIN COMMANDS:{Colors.END}
+        {Colors.GREEN}-a{Colors.END} {Colors.CYAN}[code]{Colors.END}          📥 Add a tracking code to the list
+        {Colors.GREEN}-t{Colors.END} {Colors.CYAN}[code]{Colors.END}          🔍 Track a single package
+        {Colors.GREEN}-r{Colors.END} {Colors.CYAN}[code]{Colors.END}          🗑️  Remove a package from the list
+        {Colors.GREEN}-h{Colors.END} / {Colors.GREEN}--help{Colors.END}        ❓ Show this help text
+
+{Colors.YELLOW}{Colors.BOLD}    📋 LIST COMMANDS:{Colors.END}
+        {Colors.GREEN}--list{Colors.END}              📜 List packages being tracked
+        {Colors.GREEN}--list-all{Colors.END}          📄 List tracked and delivered packages
+        {Colors.GREEN}--track-all{Colors.END}         🚚 Track all packages from the list
+
+{Colors.YELLOW}{Colors.BOLD}    🗑️  CLEANUP COMMANDS:{Colors.END}
+        {Colors.GREEN}--remove-all{Colors.END}        🧹 Remove all packages from the list
+        {Colors.GREEN}--keep{Colors.END}              💾 Keep delivered packages (default)
+        {Colors.GREEN}--no-keep{Colors.END}           🗑️  Delete delivered packages automatically
+
+{Colors.YELLOW}{Colors.BOLD}    🎨 DISPLAY OPTIONS:{Colors.END}
+        {Colors.GREEN}--show-delivered{Colors.END}    📦 Show delivered packages when tracking
+        {Colors.GREEN}--detailed{Colors.END}          📝 Show detailed event history
+
+{Colors.MAGENTA}    ═══════════════════════════════════════════════════════════════════════════{Colors.END}
+{Colors.CYAN}    💡 Example: {Colors.BOLD}mail-man -a AB123456789BR{Colors.END} {Colors.CYAN}to add a package{Colors.END}
+{Colors.MAGENTA}    ═══════════════════════════════════════════════════════════════════════════{Colors.END}
+""")
         exit(1)

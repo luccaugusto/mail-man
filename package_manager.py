@@ -1,4 +1,5 @@
 from options import options
+from ui_display import UIDisplay, ASCIIArt, Colors  # Import the new UI system
 
 
 class Package:
@@ -97,19 +98,14 @@ class PackageManager:
         if show_delivered:
             package_list = self.package_list
 
+        print(ASCIIArt.package_list_header())
+        
         if len(package_list) > 0:
-            print("These are the packages being tracked:")
-            print(
-                "  +",
-                "\n  + ".join(
-                    [
-                        f"{package.code} - {package.label} {' [Entregue]' if package.delivered == 'True' else ''}"
-                        for package in package_list
-                    ]
-                ),
-            )
+            for package in package_list:
+                print(UIDisplay.format_package_entry(package, show_delivered_status=show_delivered))
+            print("")
         else:
-            print("No packages being tracked.")
+            print(f"    {Colors.YELLOW}📭 No packages being tracked.{Colors.END}")
 
     def is_valid(self, code: str) -> bool:
         return code is not None and len(code) == 13
@@ -157,13 +153,13 @@ class PackageManager:
         )
         print("\n")
         if len(in_traffic) > 0:
-            print("============ Em Transito ============")
+            print(ASCIIArt.package_in_transit())
             for package in in_traffic:
                 self.show_single_package_status(package)
             print("\n")
 
         if len(delivered) > 0 and options.show_delivered:
-            print("============ Já Entregue ============")
+            print(ASCIIArt.package_delivered())
             for package in delivered:
                 self.show_single_package_status(package)
             print("\n")
@@ -184,9 +180,9 @@ class PackageManager:
         elif destination_city and destination_state:
             event_type = f"-> {destination_city}/{destination_state}"
 
-        print(f"  {date}")
-        print(f"    {event['descricao']}: {city}/{state} {event_type}")
-        print("  --------------------")
+        # Use the new formatted display
+        location = f"{city}/{state}"
+        print(UIDisplay.format_event_info(date, event['descricao'], location, event_type))
 
     def show_event_short(self, event: dict) -> None:
         city = event["unidade"]["endereco"]["cidade"]
@@ -209,20 +205,26 @@ class PackageManager:
         elif destination_city and destination_state:
             locale_change = f"{event['descricao']} - {city}"
 
-        print(f"  > {date} - {locale_change} ")
+        print(f"    {Colors.CYAN}🔄{Colors.END} {Colors.BOLD}{date}{Colors.END} - {locale_change}")
 
     def show_single_package_status(self, package: Package) -> None:
+        print(UIDisplay.format_package_status_header(package))
+        
         if not "objeto" in package.status:
-            print(f">>>> {package.label} {package.code}")
-            print(f"        - {package.status['mensagem_h']}")
+            print(f"    {Colors.RED}⚠️{Colors.END} {package.status['mensagem_h']}")
             print("")
             return
 
         status = package.status["objeto"]
-        print(f">>>> {package.label} {package.code}")
-        print(f"  - Previsão: {status['dtPrevista']}")
-        print(f"  - Tipo: {status['tipoPostal']['categoria']}")
+        
+        # Show prediction and type info with new formatting
+        print(UIDisplay.format_prediction_info(status['dtPrevista'], status['tipoPostal']['categoria']))
+        print("")
+        
+        # Show main event
         self.show_event(status["eventos"][0])
+        
+        # Show additional events if detailed view is enabled
         if options.detailed:
             for event in status["eventos"][1:]:
                 self.show_event_short(event)
