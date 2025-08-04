@@ -9,7 +9,7 @@ from ui_display import UIDisplay, ASCIIArt  # Import the new UI system
 
 def track_all(package_manager: PackageManager) -> None:
     print(ASCIIArt.tracking_all_header())
-    
+
     # Show packages being tracked with new formatting
     pending_packages = [p for p in package_manager.package_list if p.delivered == "False"]
     if pending_packages:
@@ -39,22 +39,17 @@ def track_single(code: str) -> None:
     track_bot = TrackBot()
     package = Package(code)
     status = track_bot.track_single(package.code)
-    package_status = next(
-        s for s in status["transito"] if s["cod_objeto_"] == package.code
-    )
+    package_status = next(s for s in status["transito"] if s["cod_objeto_"] == package.code)
     if package_status is None:
-        package_status = next(
-            s for s in status["entregue"] if s["cod_objeto_"] == package.code
-        )
+        package_status = next(s for s in status["entregue"] if s["cod_objeto_"] == package.code)
 
     package.set_status(package_status)
     package_manager.show_single_package_status(package)
 
 
 if __name__ == "__main__":
-    # Show the cool startup banner first!
     UIDisplay.show_startup_banner()
-    
+
     args = sys.argv[1:]
 
     options.parse_opts(args)
@@ -88,6 +83,9 @@ if __name__ == "__main__":
 
         elif options.command == Commands.HELP_LONG.value:
             Commands.show_help()
+        elif options.command == Commands.FETCH_CAPTCHAS.value:
+            track_bot = TrackBot()
+            track_bot.fetch_a_bunch_of_captchas(options.number_of_captchas_to_fetch)
         else:
             Commands.show_help()
 

@@ -1,5 +1,6 @@
 import os
 import signal
+import datetime
 import subprocess
 import time
 from api import Api
@@ -31,7 +32,7 @@ class TrackBot:
     def get_package_status(self, code_list: list[str]) -> list[dict]:
         print(ASCIIArt.captcha_solving())
         while True:
-            image_cookies, image = self.secure_image()
+            image_cookies, image = self.get_secure_image()
             self.update_mail_cookie(image_cookies)
             captcha_answer = self.solve_captcha()
             package_status = self.package_status(captcha_answer, code_list)
@@ -64,9 +65,7 @@ class TrackBot:
         return captcha_answer
 
     def save_captcha(self, captcha_answer: str) -> None:
-        os.rename(
-            "captcha.png", os.path.join("solved_captchas/", f"{captcha_answer}.png")
-        )
+        os.rename("captcha.png", os.path.join("solved_captchas/", f"{captcha_answer}.png"))
 
     def track_single(self, code: str) -> dict:
         return self.get_package_status([code])
@@ -99,21 +98,38 @@ class TrackBot:
                     raise e
 
                 # Calculate exponential backoff wait time (2^attempt seconds)
-                wait_time = 2 ** attempt
+                wait_time = 2**attempt
                 print(f"    {Colors.CYAN}⏳ Waiting {wait_time} seconds before retry...{Colors.END}")
                 time.sleep(wait_time)
 
-    def secure_image(self) -> [str, bytes]:
-        response = self.api.get(self.api.secure_image_url, self.headers, self.cookies)
+    def get_secure_image(self) -> tuple[str, bytes]:
+        max_retries = 6
+        for attempt in range(max_retries):
+            try:
+                print(f"    {Colors.BLUE}🔄 Getting secure image (attempt {attempt + 1}/{max_retries}){Colors.END}")
+                response = self.api.get(self.api.secure_image_url, self.headers, self.cookies)
 
-        with open("captcha.png", "wb") as file:
-            file.write(response.content)
+                # Save the captcha image to file
+                with open("captcha.png", "wb") as file:
+                    file.write(response.content)
 
-        return [response.headers["set-cookie"], response.content]
+                print(f"    {Colors.GREEN}✅ Successfully obtained secure image{Colors.END}")
+                return [response.headers["set-cookie"], response.content]
 
-    def package_status(
-        self, captcha_answer: str, package_code: list[str]
-    ) -> list[dict]:
+            except Exception as e:
+                print(f"    {Colors.YELLOW}⚠️  Attempt {attempt + 1} failed: {str(e)}{Colors.END}")
+
+                # If this was the last attempt, re-raise the exception
+                if attempt == max_retries - 1:
+                    print(f"    {Colors.RED}❌ Max retries exceeded. Unable to get secure image.{Colors.END}")
+                    raise e
+
+                # Calculate exponential backoff wait time (2^attempt seconds)
+                wait_time = 2**attempt
+                print(f"    {Colors.CYAN}⏳ Waiting {wait_time} seconds before retry...{Colors.END}")
+                time.sleep(wait_time)
+
+    def package_status(self, captcha_answer: str, package_code: list[str]) -> list[dict]:
         codes = "".join(package_code)
         base_url = self.api.rastro_multi_url
         url = f"{base_url}&objeto={codes}&captcha={captcha_answer}"
@@ -129,3 +145,13 @@ class TrackBot:
                 mail_cookie_value = value
                 break
         self.cookies[mail_cookie_name] = mail_cookie_value
+
+    def fetch_a_bunch_of_captchas(self, size_of_bunch: int):
+        print(f"    {Colors.BLUE}🔄 Fetching {size_of_bunch} captchas from server...{Colors.END}")
+        for i in range(size_of_bunch):
+            image_cookies, _ = self.get_secure_image()
+            self.update_mail_cookie(image_cookies)
+            filename = f"{datetime.datetime.now().strftime("%Y%m%d%H%M%S")}-{i}.png"
+            os.rename("captcha.png", os.path.join("downloaded_captchas/", filename))
+            print(f"    {i}/{size_of_bunch} {Colors.CYAN} Captcha saved as {filename}{Colors.END}")
+        print(f"    {Colors.GREEN}✅ Successfully fetched {size_of_bunch} captchas{Colors.END}")

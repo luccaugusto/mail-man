@@ -1,5 +1,5 @@
 from enum import Enum
-from ui_display import ASCIIArt, Colors  # Import the new UI system
+from ui_display import Colors
 
 
 class Commands(Enum):
@@ -16,10 +16,12 @@ class Commands(Enum):
     LIST_ALL = "--list-all"
     DETAILED = "--detailed"
     SHOW_DELIVERED = "--show-delivered"
+    FETCH_CAPTCHAS = "--fetch-captchas"
 
     @staticmethod
     def show_help() -> None:
-        print(f"""
+        print(
+            f"""
 {Colors.BLUE}{Colors.BOLD}    ┌─────────────────────────────────────────────────────────────────────────┐
     │  📋 MAIL-MAN HELP & USAGE GUIDE 📋                                     │
     └─────────────────────────────────────────────────────────────────────────┘{Colors.END}
@@ -47,8 +49,12 @@ class Commands(Enum):
         {Colors.GREEN}--show-delivered{Colors.END}    📦 Show delivered packages when tracking
         {Colors.GREEN}--detailed{Colors.END}          📝 Show detailed event history
 
+{Colors.YELLOW}{Colors.BOLD}    CAPTCH OPTIONS:{Colors.END}
+        {Colors.GREEN}--fetch-captchas{Colors.END} {Colors.CYAN}[number]{Colors.END}   📦 fetch <number> captchas from server
+
 {Colors.MAGENTA}    ═══════════════════════════════════════════════════════════════════════════{Colors.END}
 {Colors.CYAN}    💡 Example: {Colors.BOLD}mail-man -a AB123456789BR{Colors.END} {Colors.CYAN}to add a package{Colors.END}
 {Colors.MAGENTA}    ═══════════════════════════════════════════════════════════════════════════{Colors.END}
-""")
+"""
+        )
         exit(1)

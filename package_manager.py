@@ -1,5 +1,5 @@
 from options import options
-from ui_display import UIDisplay, ASCIIArt, Colors  # Import the new UI system
+from ui_display import UIDisplay, ASCIIArt, Colors
 
 
 class Package:
@@ -28,15 +28,13 @@ class PackageManager:
 
     def add_package(self, code: str, label="") -> None:
         if not self.is_valid(code):
-            raise ValueError(f"Invalid Tracking code [{code}].")
+            raise Exception(f"Invalid Tracking code [{code}].")
 
         self.package_list.append(Package(code, label))
         self.list_changed = True
 
     def remove_package(self, code: str) -> None:
-        index = next(
-            (i for i, p in enumerate(self.package_list) if p.code == code), None
-        )
+        index = next((i for i, p in enumerate(self.package_list) if p.code == code), None)
         if index is None:
             return
 
@@ -53,11 +51,7 @@ class PackageManager:
         if "entregue" in statuses and len(statuses["entregue"]):
             for code in statuses["entregue"]:
                 package = next(
-                    (
-                        p
-                        for p in self.package_list
-                        if p.code == code["cod_objeto"].replace(" ", "")
-                    ),
+                    (p for p in self.package_list if p.code == code["cod_objeto"].replace(" ", "")),
                     None,
                 )
                 if package is not None:
@@ -69,23 +63,13 @@ class PackageManager:
             return
 
         with open(self.package_list_file_path(), "w") as file:
-            file.write(
-                "\n".join(
-                    [
-                        f"{package.code},{package.label},{package.delivered}"
-                        for package in self.package_list
-                    ]
-                )
-            )
+            file.write("\n".join([f"{package.code},{package.label},{package.delivered}" for package in self.package_list]))
 
     def load_package_list(self) -> list:
         try:
             with open(self.package_list_file_path(), "r") as file:
                 packages = file.read().splitlines()
-                return [
-                    Package(code, label, delivered)
-                    for code, label, delivered in [p.split(",") for p in packages]
-                ]
+                return [Package(code, label, delivered) for code, label, delivered in [p.split(",") for p in packages]]
         except FileNotFoundError:
             return []
 
@@ -99,7 +83,7 @@ class PackageManager:
             package_list = self.package_list
 
         print(ASCIIArt.package_list_header())
-        
+
         if len(package_list) > 0:
             for package in package_list:
                 print(UIDisplay.format_package_entry(package, show_delivered_status=show_delivered))
@@ -114,11 +98,7 @@ class PackageManager:
         # Use cod_objeto here because cod_objeto_ is not always present
         for status in statuses["entregue"]:
             package = next(
-                (
-                    p
-                    for p in self.package_list
-                    if p.code == status["cod_objeto"].replace(" ", "")
-                ),
+                (p for p in self.package_list if p.code == status["cod_objeto"].replace(" ", "")),
                 None,
             )
             if package is not None:
@@ -127,11 +107,7 @@ class PackageManager:
 
         for status in statuses["transito"]:
             package = next(
-                (
-                    p
-                    for p in self.package_list
-                    if p.code == status["cod_objeto"].replace(" ", "")
-                ),
+                (p for p in self.package_list if p.code == status["cod_objeto"].replace(" ", "")),
                 None,
             )
             if package is not None:
@@ -182,7 +158,7 @@ class PackageManager:
 
         # Use the new formatted display
         location = f"{city}/{state}"
-        print(UIDisplay.format_event_info(date, event['descricao'], location, event_type))
+        print(UIDisplay.format_event_info(date, event["descricao"], location, event_type))
 
     def show_event_short(self, event: dict) -> None:
         city = event["unidade"]["endereco"]["cidade"]
@@ -209,21 +185,21 @@ class PackageManager:
 
     def show_single_package_status(self, package: Package) -> None:
         print(UIDisplay.format_package_status_header(package))
-        
+
         if not "objeto" in package.status:
             print(f"    {Colors.RED}⚠️{Colors.END} {package.status['mensagem_h']}")
             print("")
             return
 
         status = package.status["objeto"]
-        
+
         # Show prediction and type info with new formatting
-        print(UIDisplay.format_prediction_info(status['dtPrevista'], status['tipoPostal']['categoria']))
+        print(UIDisplay.format_prediction_info(status["dtPrevista"], status["tipoPostal"]["categoria"]))
         print("")
-        
+
         # Show main event
         self.show_event(status["eventos"][0])
-        
+
         # Show additional events if detailed view is enabled
         if options.detailed:
             for event in status["eventos"][1:]:
