@@ -20,41 +20,35 @@ class Commands(Enum):
 
     @staticmethod
     def show_help() -> None:
+        b = Colors.BOLD
+        e = Colors.END
         print(
-            f"""
-{Colors.BLUE}{Colors.BOLD}    ┌─────────────────────────────────────────────────────────────────────────┐
-    │  📋 MAIL-MAN HELP & USAGE GUIDE 📋                                     │
-    └─────────────────────────────────────────────────────────────────────────┘{Colors.END}
+            f"""{b}Usage:{e} mail-man [command] [arguments] [options]
 
-{Colors.YELLOW}{Colors.BOLD}    📦 USAGE:{Colors.END}
-        {Colors.CYAN}mail-man [command] [tracking-code] [options]{Colors.END}
+Track your Correios packages from the terminal.
+With no command, every package in the list is tracked.
 
-{Colors.YELLOW}{Colors.BOLD}    🎯 MAIN COMMANDS:{Colors.END}
-        {Colors.GREEN}-a{Colors.END} {Colors.CYAN}[code]{Colors.END}          📥 Add a tracking code to the list
-        {Colors.GREEN}-t{Colors.END} {Colors.CYAN}[code]{Colors.END}          🔍 Track a single package
-        {Colors.GREEN}-r{Colors.END} {Colors.CYAN}[code]{Colors.END}          🗑️  Remove a package from the list
-        {Colors.GREEN}-h{Colors.END} / {Colors.GREEN}--help{Colors.END}        ❓ Show this help text
+{b}Commands:{e}
+  -a <code> [label]       Add a tracking code to the list
+  -r <code>               Remove a package from the list
+  -t <code>               Track a single package
+  --list                  List the packages being tracked
+  --list-all              List tracked and delivered packages
+  --track-all             Track every package in the list (default)
+  --remove-all            Remove every package from the list
+  --fetch-captchas <n>    Download n captchas from the server
+  -h, --help              Show this help text
 
-{Colors.YELLOW}{Colors.BOLD}    📋 LIST COMMANDS:{Colors.END}
-        {Colors.GREEN}--list{Colors.END}              📜 List packages being tracked
-        {Colors.GREEN}--list-all{Colors.END}          📄 List tracked and delivered packages
-        {Colors.GREEN}--track-all{Colors.END}         🚚 Track all packages from the list
+{b}Options:{e}
+  --keep                  Keep delivered packages in the list (default)
+  --no-keep               Drop delivered packages after tracking
+  --show-delivered        Include delivered packages when tracking
+  --detailed              Show the full event history
 
-{Colors.YELLOW}{Colors.BOLD}    🗑️  CLEANUP COMMANDS:{Colors.END}
-        {Colors.GREEN}--remove-all{Colors.END}        🧹 Remove all packages from the list
-        {Colors.GREEN}--keep{Colors.END}              💾 Keep delivered packages (default)
-        {Colors.GREEN}--no-keep{Colors.END}           🗑️  Delete delivered packages automatically
-
-{Colors.YELLOW}{Colors.BOLD}    🎨 DISPLAY OPTIONS:{Colors.END}
-        {Colors.GREEN}--show-delivered{Colors.END}    📦 Show delivered packages when tracking
-        {Colors.GREEN}--detailed{Colors.END}          📝 Show detailed event history
-
-{Colors.YELLOW}{Colors.BOLD}    CAPTCH OPTIONS:{Colors.END}
-        {Colors.GREEN}--fetch-captchas{Colors.END} {Colors.CYAN}[number]{Colors.END}   📦 fetch <number> captchas from server
-
-{Colors.MAGENTA}    ═══════════════════════════════════════════════════════════════════════════{Colors.END}
-{Colors.CYAN}    💡 Example: {Colors.BOLD}mail-man -a AB123456789BR{Colors.END} {Colors.CYAN}to add a package{Colors.END}
-{Colors.MAGENTA}    ═══════════════════════════════════════════════════════════════════════════{Colors.END}
+{b}Examples:{e}
+  mail-man -a AB123456789BR keyboard
+  mail-man -t AB123456789BR
+  mail-man --track-all --show-delivered
 """
         )
         exit(1)

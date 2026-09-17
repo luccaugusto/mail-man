@@ -18,28 +18,41 @@ class Colors:
     END = '\033[0m'  # End color formatting
 
 
+_MAILMAN = r"""
+         ,
+    _.-"` `'-.
+   '._ __{}_(
+     |'--.__\
+    (   ^_\^
+     |   _ |
+     )\___/
+ .--'`:._]
+/  \      '-.
+"""
+
+_TITLE = [
+    f"{Colors.CYAN}{Colors.BOLD}╔╦╗╔═╗╦╦    ╔╦╗╔═╗╔╗╔{Colors.END}",
+    f"{Colors.CYAN}{Colors.BOLD}║║║╠═╣║║    ║║║╠═╣║║║{Colors.END}",
+    f"{Colors.CYAN}{Colors.BOLD}╩ ╩╩ ╩╩╩═╝  ╩ ╩╩ ╩╝╚╝{Colors.END}",
+    "",
+    f"{Colors.YELLOW}don't lose your shit yo{Colors.END}",
+]
+
 class ASCIIArt:
     """Collection of ASCII art for the mail-man program"""
     
     @staticmethod
     def mail_man_banner():
-        """Cool ASCII art banner for Mail Man"""
-        banner = f"""
-{Colors.CYAN}{Colors.BOLD}
- ███▄ ▄███▓ ▄▄▄       ██▓ ██▓        ███▄ ▄███▓ ▄▄▄       ███▄    █ 
-▓██▒▀█▀ ██▒▒████▄    ▓██▒▓██▒       ▓██▒▀█▀ ██▒▒████▄     ██ ▀█   █ 
-▓██    ▓██░▒██  ▀█▄  ▒██▒▒██░       ▓██    ▓██░▒██  ▀█▄  ▓██  ▀█ ██▒
-▒██    ▒██ ░██▄▄▄▄██ ░██░▒██░       ▒██    ▒██ ░██▄▄▄▄██ ▓██▒  ▐▌██▒
-▒██▒   ░██▒ ▓█   ▓██▒░██░░██████▒   ▒██▒   ░██▒ ▓█   ▓██▒▒██░   ▓██░
-░ ▒░   ░  ░ ▒▒   ▓▒█░░▓  ░ ▒░▓  ░   ░ ▒░   ░  ░ ▒▒   ▓▒█░░ ▒░   ▒ ▒ 
-░  ░      ░  ▒   ▒▒ ░ ▒ ░░ ░ ▒  ░   ░  ░      ░  ▒   ▒▒ ░░ ░░   ░ ▒░
-░      ░     ░   ▒    ▒ ░  ░ ░      ░      ░     ░   ▒      ░   ░ ░ 
-       ░         ░  ░ ░      ░  ░          ░         ░  ░         ░ 
-{Colors.END}
-{Colors.YELLOW}              📦 Don't lose your shit yo 📦{Colors.END}
-{Colors.MAGENTA}              ═════════════════════════════{Colors.END}
-"""
-        return banner
+        """Mailman art with the program name beside it, vertically centered"""
+        art = _MAILMAN.strip("\n").splitlines()
+        offset = (len(art) - len(_TITLE)) // 2
+        column = max(len(line) for line in art) + 4
+        rows = []
+        for i, art_line in enumerate(art):
+            title = _TITLE[i - offset] if offset <= i < offset + len(_TITLE) else ""
+            gap = " " * (column - len(art_line))
+            rows.append(f"{Colors.CYAN}{art_line}{Colors.END}{gap}{title}".rstrip())
+        return "\n" + "\n".join(rows) + "\n"
 
     @staticmethod
     def package_in_transit():
